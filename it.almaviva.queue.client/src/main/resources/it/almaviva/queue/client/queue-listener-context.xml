@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context" xmlns:jms="http://www.springframework.org/schema/jms"
+	xmlns:amq="http://activemq.apache.org/schema/core"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context 
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/jms 
+                           http://www.springframework.org/schema/jms/spring-jms.xsd
+                           http://activemq.apache.org/schema/core 
+                           http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<context:component-scan base-package="it.almaviva.queue.receiver" />
+
+	<!-- Activemq connection factory -->
+	<bean id="amqConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<constructor-arg index="0" value="tcp://localhost:61616" />
+		<!-- ${jms.broker.url} -->
+	</bean>
+
+	<!-- ConnectionFactory Definition -->
+	<bean id="connectionFactory" class="org.springframework.jms.connection.CachingConnectionFactory">
+		<constructor-arg ref="amqConnectionFactory" />
+	</bean>
+
+	<!-- Message Receiver Definition -->
+	<!-- <bean id="messageReceiver" class="it.almaviva.queue.receiver.JmsMessageListener">
+	</bean>
+ -->
+	<!-- <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destinationName" value="Pippo" />
+		${jms.queue.name}
+		<property name="messageListener" ref="messageReceiver" />
+	</bean>
+ -->
+<!--  
+ <bean id="queueDestination" class="org.springframework.jndi.JndiObjectFactoryBean"> 
+        <property name="jndiTemplate" ref="jndiTemplate" /> 
+        <property name="jndiName"> 
+            <value>queue/ReceiverQueue</value> 
+        </property> 
+    </bean>  -->
+    <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg index="0" value="Pippo" />
+	</bean>
+
+
+	<bean id="messageListener" class="it.almaviva.queue.receiver.JmsMessageListener" />
+
+	<!-- and this is the message listener container -->
+	<bean id="jmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destination" ref="queueDestination" />
+		<property name="messageListener" ref="messageListener" />
+	</bean>
+
+</beans>
