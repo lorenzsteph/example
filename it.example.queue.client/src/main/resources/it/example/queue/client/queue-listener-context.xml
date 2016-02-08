@@ -23,28 +23,9 @@
 		<constructor-arg ref="amqConnectionFactory" />
 	</bean>
 
-	<!-- Message Receiver Definition -->
-	<!-- <bean id="messageReceiver" class="it.example.queue.receiver.JmsMessageListener">
-	</bean>
- -->
-	<!-- <bean class="org.springframework.jms.listener.SimpleMessageListenerContainer">
-		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="destinationName" value="Pippo" />
-		${jms.queue.name}
-		<property name="messageListener" ref="messageReceiver" />
-	</bean>
- -->
-<!--  
- <bean id="queueDestination" class="org.springframework.jndi.JndiObjectFactoryBean"> 
-        <property name="jndiTemplate" ref="jndiTemplate" /> 
-        <property name="jndiName"> 
-            <value>queue/ReceiverQueue</value> 
-        </property> 
-    </bean>  -->
     <bean id="queueDestination" class="org.apache.activemq.command.ActiveMQQueue">
 		<constructor-arg index="0" value="Pippo" />
 	</bean>
-
 
 	<bean id="messageListener" class="it.example.queue.receiver.JmsMessageListener" />
 

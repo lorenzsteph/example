@@ -10,7 +10,9 @@ import javax.jms.TextMessage;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ReceiverListener {
 
 	ActiveMQConnectionFactory factory;
